@@ -40,7 +40,7 @@ class MarcoCliente extends JFrame{
 	
 }
 
-class LaminaMarcoCliente extends JPanel{
+class LaminaMarcoCliente extends JPanel implements Runnable{
 	
 	public LaminaMarcoCliente(){
 	
@@ -70,6 +70,10 @@ class LaminaMarcoCliente extends JPanel{
 		miboton.addActionListener(miEvento);
 		
 		add(miboton);	
+
+		Thread miHilo= new Thread(this);
+
+		miHilo.start();
 		
 	}
 	
@@ -129,6 +133,31 @@ class LaminaMarcoCliente extends JPanel{
 	private JTextArea campoChat;
 
 	private JButton miboton;
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		try {
+			ServerSocket servidor_cliente=new ServerSocket(9090);
+			Socket cliente;
+
+			PaqueteEnvio paqueteRecibido;
+
+			while(true){
+				
+				cliente=servidor_cliente.accept();
+
+				ObjectInputStream flujoEntrada= new ObjectInputStream(cliente.getInputStream());
+
+				paqueteRecibido=(PaqueteEnvio) flujoEntrada.readObject();
+
+				campoChat.append("\n"+paqueteRecibido.getNick()+": "+paqueteRecibido.getMensaje());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+		}
+	}
 	
 }
 
