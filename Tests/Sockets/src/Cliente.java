@@ -6,9 +6,7 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataOutput;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import javax.swing.*;
 
@@ -46,9 +44,21 @@ class LaminaMarcoCliente extends JPanel{
 	
 	public LaminaMarcoCliente(){
 	
-		JLabel texto=new JLabel("CLIENTE");
+		nick=new JTextField(5);
+
+		add(nick);
+
+		JLabel texto=new JLabel("-CHAT-");
 		
 		add(texto);
+
+		ip=new JTextField(8);
+
+		add(ip);
+		
+		campoChat = new JTextArea(12,20);
+
+		add(campoChat);
 	
 		campo1=new JTextField(20);
 	
@@ -71,13 +81,31 @@ class LaminaMarcoCliente extends JPanel{
 			//System.out.println(campo1.getText());
 
 			try {
-				Socket miSocket = new Socket("192.168.100.13",9999);
+				Socket miSocket = new Socket("192.168.100.9",9999);
+				
+				//Objeto como paquete de los datos que se quieren enviar
+				PaqueteEnvio datos = new PaqueteEnvio(); //Se quiere empaquetar los datos en el cliente (ip, nickname, mensaje)
 
-				DataOutputStream flujo_salida= new DataOutputStream(miSocket.getOutputStream());
+				datos.setNick(nick.getText());
+				
+				datos.setIp(ip.getText());
+
+				datos.setMensaje(campo1.getText());
+
+				//Creación de un flujo para enviar al destinatario
+				ObjectOutputStream paqueteDatos=new ObjectOutputStream(miSocket.getOutputStream()); //Flujo de salida para enviar el objeto por la red
+
+				//Se requiere escribir en nuestro flujo de datos nuestro paquete de datos
+
+				paqueteDatos.writeObject(datos);
+
+				miSocket.close();
+
+				/*DataOutputStream flujo_salida= new DataOutputStream(miSocket.getOutputStream());
 
 				flujo_salida.writeUTF(campo1.getText()); //En el flujo de datos de salida va a viajar el texto del campo1, escribe en el flujo lo que hay en el stream
 
-				flujo_salida.close(); //Se cierra para que no quede abierto
+				flujo_salida.close(); //Se cierra para que no quede abierto*/
 
 				
 
@@ -96,8 +124,48 @@ class LaminaMarcoCliente extends JPanel{
 		
 		
 		
-	private JTextField campo1;
+	private JTextField campo1, nick, ip;
 	
+	private JTextArea campoChat;
+
 	private JButton miboton;
 	
+}
+
+
+class PaqueteEnvio implements Serializable{
+
+	//Es importante serializar el paquete de datos ya que se enviará un error de tipo serial, debido a la falta de implementación de esta inferfaz
+	/*
+	 * ¿Qué es serialización?
+	 * La serialización le dice a un objeto que debe de convertirse en una serie de bytes para ser enviados por la red
+	 */
+
+	private String nick,ip,mensaje;
+
+	public String getNick() {
+		return nick;
+	}
+
+	public void setNick(String nick) {
+		this.nick = nick;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public String getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
+	}
+
+
 }

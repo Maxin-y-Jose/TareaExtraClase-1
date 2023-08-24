@@ -5,7 +5,6 @@
  */
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.io.*;
 import java.net.*;
@@ -49,31 +48,51 @@ class MarcoServidor extends JFrame implements Runnable {
 	private	JTextArea areatexto;
 
 	@Override
-	public void run() {
+	public void run() { //Se ejecuta en segundo plano
 		// TODO Auto-generated method stub
 		//System.out.println("Estoy a la escucha");
 
 		try {
-			ServerSocket servidor= new ServerSocket(9999); //Este a la escucha
+			ServerSocket servidor= new ServerSocket(9999); //Esté a la escucha
+
+			String nick,ip,mensaje;
+
+			PaqueteEnvio paqueteRecibido; //Se instancia este objeto para recibir los datos desmenuzados
 
 			while (true) { //No hay problema con este ciclo, ya que el hilo ejecuta en segundo plano este bucle
 
 				Socket miSocket = servidor.accept(); //Acepte el servidor
 
-				DataInputStream flujoEntrada= new DataInputStream(miSocket.getInputStream());
+				ObjectInputStream paqueteDatos=new ObjectInputStream(miSocket.getInputStream()); //Se crea el flujo de datos de entrada
+
+				paqueteRecibido=(PaqueteEnvio) paqueteDatos.readObject(); //Se recibe el paquete y se guarda
+
+				//Se accede a la información presente en el paquete para que se pueda visualizar
+
+				nick=paqueteRecibido.getNick();
+
+				ip=paqueteRecibido.getIp();
+
+				mensaje=paqueteRecibido.getMensaje();
+
+				/*DataInputStream flujoEntrada= new DataInputStream(miSocket.getInputStream());
 
 				String mensajeTexto=flujoEntrada.readUTF();
 
-				areatexto.append(mensajeTexto+"\n");
+				areatexto.append(mensajeTexto+"\n");*/
+
+				areatexto.append("\n"+nick+": "+mensaje+" para "+ip); //Se tiene al servidor de por medio para la revisión de mensajes de un usuario
 
 				miSocket.close();
 				
 			}
 
 			
-		} catch (IOException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 }
+
+
