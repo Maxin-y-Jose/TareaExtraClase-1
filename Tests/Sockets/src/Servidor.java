@@ -91,6 +91,8 @@ class MarcoServidor extends JFrame implements Runnable {
 				//Se escribe en el flujo los datos recibidos
 				paqueteReenvio.writeObject(paqueteRecibido);
 				//Con esto se llevan los datos al otro lado
+				paqueteReenvio.close();
+				
 				enviaDestinatario.close();
 
 				miSocket.close();

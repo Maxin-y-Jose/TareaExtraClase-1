@@ -84,6 +84,8 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 		public void actionPerformed(ActionEvent e) {
 			//System.out.println(campo1.getText());
 
+			campoChat.append("\n"+campo1.getText());
+
 			try {
 				Socket miSocket = new Socket("192.168.100.9",9999);
 				
@@ -164,7 +166,7 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 
 class PaqueteEnvio implements Serializable{
 
-	//Es importante serializar el paquete de datos ya que se enviará un error de tipo serial, debido a la falta de implementación de esta inferfaz
+	//Es importante serializar el paquete de datos ya que se enviará un error de tipo serial, debido a la falta de la implementación de esta inferfaz
 	/*
 	 * ¿Qué es serialización?
 	 * La serialización le dice a un objeto que debe de convertirse en una serie de bytes para ser enviados por la red
