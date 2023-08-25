@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 public class Servidor  {
 
@@ -74,6 +75,9 @@ class MarcoServidor extends JFrame implements Runnable {
 
 				mensaje=paqueteRecibido.getMensaje();
 
+				//Creación de un ArrayList para almacenar las IP de los clientes presentes para añadirlos a la lista del JCombo
+				ArrayList <String> listaIP= new ArrayList<String>();
+
 				/*DataInputStream flujoEntrada= new DataInputStream(miSocket.getInputStream());
 
 				String mensajeTexto=flujoEntrada.readUTF();
@@ -106,7 +110,11 @@ class MarcoServidor extends JFrame implements Runnable {
 					String ipRemota=localizacion.getHostAddress(); //Se almacena la dirección IP del usuario
 					System.out.println("Online "+ipRemota);
 
-					//-----------------------------
+					listaIP.add(ipRemota); //Cada que se conecta un cliente se añade la IP en el ArrayList
+
+					paqueteRecibido.setIps(listaIP); //Se añade un elemento más a nuestro paquete de datos
+
+				//-----------------------------
 				}
 				
 			}

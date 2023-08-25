@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import javax.swing.*;
+import java.util.*;
 
 
 public class Cliente {
@@ -217,6 +218,16 @@ class PaqueteEnvio implements Serializable{
 	 */
 
 	private String nick,ip,mensaje;
+
+	private ArrayList<String> ips;
+
+	public ArrayList<String> getIps() {
+		return ips;
+	}
+
+	public void setIps(ArrayList<String> ips) {
+		this.ips = ips;
+	}
 
 	public String getNick() {
 		return nick;
