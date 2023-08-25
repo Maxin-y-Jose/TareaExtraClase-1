@@ -16,7 +16,6 @@ import java.util.*;
 public class Cliente {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		
 		MarcoCliente mimarco=new MarcoCliente();
 		
@@ -182,10 +181,8 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 				flujo_salida.close(); //Se cierra para que no quede abierto*/
 
 			} catch (UnknownHostException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				//e1.printStackTrace();
 				System.out.println(e1.getMessage());
 			}
@@ -210,49 +207,48 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 	 */
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		try {
-			ServerSocket servidor_cliente=new ServerSocket(9090);
-			Socket cliente;
+			try (ServerSocket servidor_cliente = new ServerSocket(9090)) {
+				Socket cliente;
 
-			PaqueteEnvio paqueteRecibido;
+				PaqueteEnvio paqueteRecibido;
 
-			while(true){
-				
-				cliente=servidor_cliente.accept();
+				while(true){
+					
+					cliente=servidor_cliente.accept();
 
-				ObjectInputStream flujoEntrada= new ObjectInputStream(cliente.getInputStream());
+					ObjectInputStream flujoEntrada= new ObjectInputStream(cliente.getInputStream());
 
-				paqueteRecibido=(PaqueteEnvio) flujoEntrada.readObject();
+					paqueteRecibido=(PaqueteEnvio) flujoEntrada.readObject();
 
-				//Bloque if/else que evita que se repitan mensajes de IPs que se conectan en el chat del usuario
+					//Bloque if/else que evita que se repitan mensajes de IPs que se conectan en el chat del usuario
 
-				if(!paqueteRecibido.getMensaje().equals(" online")){
+					if(!paqueteRecibido.getMensaje().equals(" online")){
 
-					campoChat.append("\n"+paqueteRecibido.getNick()+": "+paqueteRecibido.getMensaje()); //Extrae el nombre y mensaje
+						campoChat.append("\n"+paqueteRecibido.getNick()+": "+paqueteRecibido.getMensaje()); //Extrae el nombre y mensaje
 
-				}
-				else{
+					}
+					else{
 
-					//campoChat.append("\n"+paqueteRecibido.getIps()); //Extrae el ArrayList
+						//campoChat.append("\n"+paqueteRecibido.getIps()); //Extrae el ArrayList
 
-					ArrayList <String> ipsMenu = new ArrayList<String>(); //Se crea un ArrayList para añadir los IP al menú
+						ArrayList <String> ipsMenu = new ArrayList<String>(); //Se crea un ArrayList para añadir los IP al menú
 
-					ipsMenu=paqueteRecibido.getIps(); //Se almacenan las IPs enviadas por el servidor
+						ipsMenu=paqueteRecibido.getIps(); //Se almacenan las IPs enviadas por el servidor
 
-					ip.removeAllItems(); //Cada vez que un cliente se conecta se elimina todo lo que haya en el JCombo todo lo que estba antes
+						ip.removeAllItems(); //Cada vez que un cliente se conecta se elimina todo lo que haya en el JCombo todo lo que estba antes
 
-					for(String z:ipsMenu){
+						for(String z:ipsMenu){
 
-						ip.addItem(z);
+							ip.addItem(z);
+
+						}
 
 					}
 
 				}
-
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			System.out.println(e.getMessage());
 		}
 	}
