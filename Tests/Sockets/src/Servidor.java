@@ -61,14 +61,6 @@ class MarcoServidor extends JFrame implements Runnable {
 
 				Socket miSocket = servidor.accept(); //Acepte el servidor
 
-				//-------Detecta Online------
-
-				InetAddress localizacion=miSocket.getInetAddress(); //Se almacena la dirección del cliente en formato InetAddres
-
-				String ipRemota=localizacion.getHostAddress(); //Se almacena la dirección IP del usuario
-				System.out.println("Online "+ipRemota);
-
-				//-----------------------------
 
 				ObjectInputStream paqueteDatos=new ObjectInputStream(miSocket.getInputStream()); //Se crea el flujo de datos de entrada
 
@@ -88,21 +80,34 @@ class MarcoServidor extends JFrame implements Runnable {
 
 				areatexto.append(mensajeTexto+"\n");*/
 
-				areatexto.append("\n"+nick+": "+mensaje+" para "+ip); //Se tiene al servidor de por medio para la revisión de mensajes de un usuario
+				if (!mensaje.equals(" online")){ //Cuando no es la primera vez que se conecta el usuario
 
-				Socket enviaDestinatario = new Socket(ip,9090); //Se crea un nuevo socket en donde va a viajar la información del servidor al nuevo cliente
+					areatexto.append("\n"+nick+": "+mensaje+" para "+ip); //Se tiene al servidor de por medio para la revisión de mensajes de un usuario
 
-				//Flujo de datos vacío
-				ObjectOutputStream paqueteReenvio = new ObjectOutputStream(enviaDestinatario.getOutputStream());
+					Socket enviaDestinatario = new Socket(ip,9090); //Se crea un nuevo socket en donde va a viajar la información del servidor al nuevo cliente
 
-				//Se escribe en el flujo los datos recibidos
-				paqueteReenvio.writeObject(paqueteRecibido);
-				//Con esto se llevan los datos al otro lado
-				paqueteReenvio.close();
-				
-				enviaDestinatario.close();
+					//Flujo de datos vacío
+					ObjectOutputStream paqueteReenvio = new ObjectOutputStream(enviaDestinatario.getOutputStream());
 
-				miSocket.close();
+					//Se escribe en el flujo los datos recibidos
+					paqueteReenvio.writeObject(paqueteRecibido);
+					//Con esto se llevan los datos al otro lado
+					paqueteReenvio.close();
+					
+					enviaDestinatario.close();
+
+					miSocket.close();
+				}
+				else{ //Si es la primera vez que se conecta el usuario
+				//-------Detecta Online------
+
+					InetAddress localizacion=miSocket.getInetAddress(); //Se almacena la dirección del cliente en formato InetAddres
+
+					String ipRemota=localizacion.getHostAddress(); //Se almacena la dirección IP del usuario
+					System.out.println("Online "+ipRemota);
+
+					//-----------------------------
+				}
 				
 			}
 

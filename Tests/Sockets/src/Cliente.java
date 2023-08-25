@@ -86,11 +86,13 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 
 		ip=new JComboBox();
 
-		ip.addItem("Usuario 1");
+		/*ip.addItem("Usuario 1");
 
 		ip.addItem("Usuario 2");
 
-		ip.addItem("Usuario 3");
+		ip.addItem("Usuario 3");*/
+
+		ip.addItem("192.168.100.7");
 
 		add(ip);
 		
