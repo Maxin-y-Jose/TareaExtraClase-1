@@ -8,6 +8,11 @@ import java.net.*;
 import javax.swing.*;
 import java.util.*;
 
+/**
+ * Esta clase Cliente permite la creación de la ventana JFrame, además de que permite cerrar la ventana
+ * @author Max Stradi
+ * @version 20/08/2023
+ */
 public class Cliente {
 
 	public static void main(String[] args) {
@@ -21,6 +26,11 @@ public class Cliente {
 
 }
 
+/**
+ * La clase MarcoCliente va a delimitar las dimensiones de la ventana, además de que sirve para el envío de la IP del cliente que ejecute por primera vez el programa
+ * @author José Barquero y Max Stradi
+ * @version 25/08/2023
+ */
 class MarcoCliente extends JFrame{
 	
 	public MarcoCliente(){
@@ -44,9 +54,15 @@ class MarcoCliente extends JFrame{
  * La clase EnvioOnline hereda una clase adaptador de ventana, la cual es parte del java.awt.event, esto permite que genere un evento de al iniciar la ventana de cliente
  * que envíe un texto " online" al servidor, que permitirá reconocer que se ha conectado por primera vez un nuevo cliente al chat, para así podes envíar su IP y añadirla
  * a una ArrayList con los IPs presentes en el chat.
+ * @author José Barquero
+ * @version 24/08/2023
  */
 class EnvioOnline extends WindowAdapter{
 
+	/**
+	 * Constructor para el evento de cuando se abra por primera vez el programa del cliente
+	 * @param e Este parámetro es el que genera el evento que envía la IP al servidor
+	 */
 	public void windowOpened(WindowEvent e){
 		
 		try{
@@ -68,6 +84,11 @@ class EnvioOnline extends WindowAdapter{
 }
 //-------------------------------------
 
+/**
+ * Esta clase es dónde se van a añadir todos los aspectos gráficos que va a visulizar el usuario
+ * @author Max Stradi
+ * @version 20/08/2023
+ */
 class LaminaMarcoCliente extends JPanel implements Runnable{
 	
 	public LaminaMarcoCliente(){
@@ -120,6 +141,11 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 		miHilo.start();
 	}
 	
+	/**
+	 * Esta clase consiste en la creación del "canal" (socket) que permite comunicar al cliente con el servidor para el envío de datos
+	 * @author José Barquero
+	 * @version 24/08/2023
+	 */
 	private class EnviaTexto implements ActionListener{
 
 		@Override
@@ -177,6 +203,11 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 
 	private JButton miboton;
 
+	/**
+	 * El método run permite que los clientes puedan ver el IP de los usuarios que se van conectando al chat con el uso de la lista desplegable (JComboBox)
+	 * @author José Barquero
+	 * @version 25/08/2023
+	 */
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -228,6 +259,11 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 	
 }
 
+/**
+ * Esta clase permite la creación de un paquete de datos que va a ser serializado para ser enviado al servidor y así el tenga los datos y los comunique a los demás clientes presentes en el chat
+ * @author José Barquero
+ * @version 25/08/2023
+ */
 class PaqueteEnvio implements Serializable{
 
 	//Es importante serializar el paquete de datos ya que se enviará un error de tipo serial, debido a la falta de la implementación de esta inferfaz
@@ -271,6 +307,5 @@ class PaqueteEnvio implements Serializable{
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
 	}
-
 
 }

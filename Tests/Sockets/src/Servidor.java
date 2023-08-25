@@ -8,6 +8,11 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+/**
+ * Esta clase es la que va a generar la ventana que puede ser cerrada para el servidor
+ * @author Max Stradi
+ * @version 20/08/2023
+ */
 public class Servidor  {
 
 	public static void main(String[] args) {
@@ -20,6 +25,11 @@ public class Servidor  {
 	}	
 }
 
+/**
+ * Clase que añade a la interfaz gráfica lo necesario que se necesita ver en el servidor, como las IPs conectadas, etc...
+ * @author Max Stradi
+ * @version 24/08/2023
+ */
 class MarcoServidor extends JFrame implements Runnable {
 	
 	public MarcoServidor(){
@@ -46,6 +56,11 @@ class MarcoServidor extends JFrame implements Runnable {
 	
 	private	JTextArea areatexto;
 
+	/**
+	 * Dentro del método run se tiene toda la lógica de los sockets a utilizar.
+	 * Se crean sockets que permiten la escucha hasta recibir una conexión cliente-servidor, en donde se genera un flujo de datos para los clientes conectados.
+	 * Este flujo de datos permite enviar paquetes con los nicks, IPs y mensajes que cada usuario envíe. En donde, estos datos pasan primeramente por el servidor para luego ser enviados al destinatario.
+	 */
 	@Override
 	public void run() { //Se ejecuta en segundo plano
 		// TODO Auto-generated method stub
@@ -136,12 +151,9 @@ class MarcoServidor extends JFrame implements Runnable {
 				
 			}
 
-			
 		} catch (IOException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 }
-
-
