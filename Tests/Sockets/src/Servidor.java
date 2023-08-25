@@ -114,6 +114,23 @@ class MarcoServidor extends JFrame implements Runnable {
 
 					paqueteRecibido.setIps(listaIP); //Se añade un elemento más a nuestro paquete de datos
 
+					for (String z: listaIP) {
+						
+						Socket enviaDestinatario = new Socket(z,9090); //Se crea un nuevo socket en donde va a viajar la información del servidor al nuevo cliente
+
+						//Flujo de datos vacío
+						ObjectOutputStream paqueteReenvio = new ObjectOutputStream(enviaDestinatario.getOutputStream());
+
+						//Se escribe en el flujo los datos recibidos
+						paqueteReenvio.writeObject(paqueteRecibido);
+						//Con esto se llevan los datos al otro lado
+						paqueteReenvio.close();
+						
+						enviaDestinatario.close();
+
+						miSocket.close();
+					}
+
 				//-----------------------------
 				}
 				

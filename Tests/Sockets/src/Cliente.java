@@ -8,7 +8,6 @@ import java.net.*;
 import javax.swing.*;
 import java.util.*;
 
-
 public class Cliente {
 
 	public static void main(String[] args) {
@@ -21,7 +20,6 @@ public class Cliente {
 	}
 
 }
-
 
 class MarcoCliente extends JFrame{
 	
@@ -42,6 +40,11 @@ class MarcoCliente extends JFrame{
 }
 
 //--------Envio Señal Online-------
+/**
+ * La clase EnvioOnline hereda una clase adaptador de ventana, la cual es parte del java.awt.event, esto permite que genere un evento de al iniciar la ventana de cliente
+ * que envíe un texto " online" al servidor, que permitirá reconocer que se ha conectado por primera vez un nuevo cliente al chat, para así podes envíar su IP y añadirla
+ * a una ArrayList con los IPs presentes en el chat.
+ */
 class EnvioOnline extends WindowAdapter{
 
 	public void windowOpened(WindowEvent e){
@@ -93,7 +96,7 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 
 		ip.addItem("Usuario 3");*/
 
-		ip.addItem("192.168.100.7");
+		//ip.addItem("192.168.100.7");
 
 		add(ip);
 		
@@ -115,9 +118,7 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 		Thread miHilo= new Thread(this);
 
 		miHilo.start();
-		
 	}
-	
 	
 	private class EnviaTexto implements ActionListener{
 
@@ -154,9 +155,6 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 
 				flujo_salida.close(); //Se cierra para que no quede abierto*/
 
-				
-
-
 			} catch (UnknownHostException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -168,8 +166,6 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 		}
 		
 	}
-		
-		
 		
 	private JTextField campo1;
 
@@ -198,7 +194,31 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 
 				paqueteRecibido=(PaqueteEnvio) flujoEntrada.readObject();
 
-				campoChat.append("\n"+paqueteRecibido.getNick()+": "+paqueteRecibido.getMensaje());
+				//Bloque if/else que evita que se repitan mensajes de IPs que se conectan en el chat del usuario
+
+				if(!paqueteRecibido.getMensaje().equals(" online")){
+
+					campoChat.append("\n"+paqueteRecibido.getNick()+": "+paqueteRecibido.getMensaje()); //Extrae el nombre y mensaje
+
+				}
+				else{
+
+					//campoChat.append("\n"+paqueteRecibido.getIps()); //Extrae el ArrayList
+
+					ArrayList <String> ipsMenu = new ArrayList<String>(); //Se crea un ArrayList para añadir los IP al menú
+
+					ipsMenu=paqueteRecibido.getIps(); //Se almacenan las IPs enviadas por el servidor
+
+					ip.removeAllItems(); //Cada vez que un cliente se conecta se elimina todo lo que haya en el JCombo todo lo que estba antes
+
+					for(String z:ipsMenu){
+
+						ip.addItem(z);
+
+					}
+
+				}
+
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -207,7 +227,6 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 	}
 	
 }
-
 
 class PaqueteEnvio implements Serializable{
 
