@@ -1,11 +1,8 @@
 /* Importante la API de Java
  * https://docs.oracle.com/javase/8/docs/api/
- * https://docs.oracle.com/javase/8/docs/api/
- * https://docs.oracle.com/javase/8/docs/api/
  */
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import javax.swing.*;
@@ -36,23 +33,64 @@ class MarcoCliente extends JFrame{
 		add(milamina);
 		
 		setVisible(true);
+
+		addWindowListener(new EnvioOnline()); //Permite enviar la IP al servidor
+
 		}	
 	
 }
 
+//--------Envio Señal Online-------
+class EnvioOnline extends WindowAdapter{
+
+	public void windowOpened(WindowEvent e){
+		
+		try{
+			Socket miSocket2= new Socket("192.168.100.7",9999);
+
+			PaqueteEnvio datos=new PaqueteEnvio();
+
+			datos.setMensaje(" online");
+
+			ObjectOutputStream paqueteDatos=new ObjectOutputStream(miSocket2.getOutputStream());
+
+			paqueteDatos.writeObject(datos);
+
+			miSocket2.close();
+
+		}catch(Exception e1){}
+
+	}
+}
+//-------------------------------------
+
 class LaminaMarcoCliente extends JPanel implements Runnable{
 	
 	public LaminaMarcoCliente(){
+
+		String nickUsuario=JOptionPane.showInputDialog("Nick: "); //Genera una ventana emergente para añadir un nombre de usuario
+
+		JLabel nNick=new JLabel("Nick: ");
+
+		add(nNick);
 	
-		nick=new JTextField(5);
+		nick=new JLabel();
+
+		nick.setText(nickUsuario);
 
 		add(nick);
 
-		JLabel texto=new JLabel("-CHAT-");
+		JLabel texto=new JLabel("Online: ");
 		
 		add(texto);
 
-		ip=new JTextField(8);
+		ip=new JComboBox();
+
+		ip.addItem("Usuario 1");
+
+		ip.addItem("Usuario 2");
+
+		ip.addItem("Usuario 3");
 
 		add(ip);
 		
@@ -87,14 +125,14 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 			campoChat.append("\n"+campo1.getText());
 
 			try {
-				Socket miSocket = new Socket("192.168.100.9",9999);
+				Socket miSocket = new Socket("192.168.100.7",9999);
 				
 				//Objeto como paquete de los datos que se quieren enviar
 				PaqueteEnvio datos = new PaqueteEnvio(); //Se quiere empaquetar los datos en el cliente (ip, nickname, mensaje)
 
 				datos.setNick(nick.getText());
 				
-				datos.setIp(ip.getText());
+				datos.setIp(ip.getSelectedItem().toString());
 
 				datos.setMensaje(campo1.getText());
 
@@ -130,7 +168,11 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 		
 		
 		
-	private JTextField campo1, nick, ip;
+	private JTextField campo1;
+
+	private JComboBox ip;
+
+	private JLabel nick;
 	
 	private JTextArea campoChat;
 

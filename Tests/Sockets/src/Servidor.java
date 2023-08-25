@@ -1,7 +1,5 @@
 /* Importante la API de Java
  * https://docs.oracle.com/javase/8/docs/api/
- * https://docs.oracle.com/javase/8/docs/api/
- * https://docs.oracle.com/javase/8/docs/api/
  */
 
 import javax.swing.*;
@@ -62,6 +60,15 @@ class MarcoServidor extends JFrame implements Runnable {
 			while (true) { //No hay problema con este ciclo, ya que el hilo ejecuta en segundo plano este bucle
 
 				Socket miSocket = servidor.accept(); //Acepte el servidor
+
+				//-------Detecta Online------
+
+				InetAddress localizacion=miSocket.getInetAddress(); //Se almacena la dirección del cliente en formato InetAddres
+
+				String ipRemota=localizacion.getHostAddress(); //Se almacena la dirección IP del usuario
+				System.out.println("Online "+ipRemota);
+
+				//-----------------------------
 
 				ObjectInputStream paqueteDatos=new ObjectInputStream(miSocket.getInputStream()); //Se crea el flujo de datos de entrada
 
